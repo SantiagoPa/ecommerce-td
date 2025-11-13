@@ -4,7 +4,9 @@ import Badge from '../core/Badge.vue'
 import { useNavbar } from '~/composable/useNavbar';
 import { useStore } from '~/store/useStore';
 import AuthDropdown from './AuthDropdown.vue';
+import { useProfile } from '~/composable/useProfile';
 
+const { isAuthenticated } = useProfile();
 
 const {
   isMenuOpen,
@@ -13,6 +15,9 @@ const {
 
 const { getUniqItems } = storeToRefs(useStore());
 
+const memberMessage = computed(() => {
+  return isAuthenticated.value ? 'Miembro' : '';
+});
 
 </script>
 
@@ -49,17 +54,18 @@ const { getUniqItems } = storeToRefs(useStore());
           </button>
 
           <!-- Auth Button -->
-
-          <Badge>
-            Miembro
-          </Badge>
+          <ClientOnly fallback-tag="div">
+            <Badge v-if="memberMessage">
+              {{ memberMessage }}
+            </Badge>
+          </ClientOnly>
 
 
           <!-- Auth Dropdown - Solo cliente -->
-           <ClientOnly fallback-tag="span">
+          <ClientOnly fallback-tag="span">
             <AuthDropdown />
           </ClientOnly>
-           
+
 
           <!-- Mobile Menu Button -->
           <button @click="toggleMenu"
