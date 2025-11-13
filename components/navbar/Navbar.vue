@@ -11,7 +11,7 @@ const {
   toggleAuth,
 } = useNavbar();
 
-const { getTotalItems } = storeToRefs(useStore());
+const { getUniqItems } = storeToRefs(useStore());
 
 
 </script>
@@ -42,9 +42,9 @@ const { getTotalItems } = storeToRefs(useStore());
           <button
             class="relative inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9">
             <ShoppingCart :size="20" />
-            <span v-if="getTotalItems > 0"
+            <span v-if="getUniqItems > 0"
               class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-              {{ getTotalItems }}
+              {{ getUniqItems }}
             </span>
           </button>
 

@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import { BanknoteArrowUp, PackagePlus, StoreIcon } from 'lucide-vue-next';
+import { formatPrice } from '~/lib/formatPrice';
+import { useStore } from '~/store/useStore';
+
+const { getTotalItems, getProductsCart, getTotalPrices } = storeToRefs(useStore());
+const { onPlusItemQuantity, onMinusItemQuantity } = useStore();
+
+</script>
+
+<template>
+    <div class="w-full mt-8 md:mt-8 lg:mt-16 bg-white mx-1 border-2 border-gray-200 rounded-md">
+
+        <h1
+            class="flex flex-row gap-2 text-center justify-center text-lg bg-gray-50 rounded-lg p-2 text-indigo-950 font-bold">
+            <StoreIcon />
+            <span>
+                Mi Carrito ({{ getTotalItems }})
+            </span>
+        </h1>
+
+        <article class="h-[80vh] overflow-y-auto flex flex-col gap-5 mt-5">
+            <div v-for="product in getProductsCart" :key="product.id"
+                class=" bg-gray-50 mx-2 flex flex-col text-center">
+                <span class="text-indigo-700 font-bold">
+                    {{ product.title }}
+                </span>
+                <span class="flex flex-row justify-center text-center gap-2">
+                    <span>
+                        {{ product.quantity }}
+                    </span>
+                    <PackagePlus />
+                </span>
+                <span class="">{{ formatPrice(product.price) }} x {{ product.quantity }}</span>
+                <span class="flex flex-row font-bold justify-center text-center gap-2">
+                    <BanknoteArrowUp />
+                    <span>
+                        {{ formatPrice(product.price * product.quantity) }}
+                    </span>
+                </span>
+                <div class="flex  justify-center items-center gap-4 mb-2 mt-2">
+                    <div class="flex items-center border rounded-md">
+                        <button @click="onMinusItemQuantity(product)" 
+                            class="px-2 py-1 hover:bg-accent transition-colors rounded-l-md">
+                            -
+                        </button>
+                        <span class="px-2 py-1 border-x font-medium min-w-[30px] text-center">
+                            {{ product.quantity }}
+                        </span>
+                        <button @click="onPlusItemQuantity(product)" class="px-2 py-1 hover:bg-accent transition-colors rounded-r-md">
+                            +
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="bg-gray-50 flex flex-col gap-5 mt-5 p-2" v-if="getTotalPrices > 0">
+            <h1 class="text-center text-green-500 flex flex-row justify-center gap-1">
+                <BanknoteArrowUp /> {{ formatPrice(getTotalPrices) }}
+            </h1>
+        </article>
+    </div>
+</template>

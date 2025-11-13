@@ -1,24 +1,37 @@
 
 import { defineStore } from 'pinia'
+import { usePersisted } from '~/composable/usePersisted'
 import type { ProductCart, StateStoreCart } from '~/types/cart'
 import type { Product } from '~/types/products'
 
 export const useStore = defineStore('cart', {
-    state: (): StateStoreCart => ({
-        productsCart: [],
-    }),
+    state: (): StateStoreCart => {
+        // Cargar datos del localStorage al inicializar usando el composable
+        const { loadFromStorage } = usePersisted("cart-store");
+        const stored = loadFromStorage() as { productsCart: ProductCart[] }
+        console.log({ stored });
+        return stored || { productsCart: [] }
+    },
     getters: {
         getProductsCart: (state): ProductCart[] => state.productsCart,
         getTotalItems: (state): number => {
             if (state.productsCart.length === 0) return 0;
             return state.productsCart.reduce((acc, el) => acc += el.quantity, 0);
         },
-        getProductById: (state): ((productId: number) => ProductCart | undefined) => {
-            return (productId: number) => state.productsCart.find((prod)=>prod.id === productId);
+        getUniqItems: (state): number => {
+            if (state.productsCart.length === 0) return 0;
+            return state.productsCart.length;
+        },
+        getTotalPrices: (state) => {
+            if (state.productsCart.length === 0) return 0;
+            return state.productsCart.reduce((acc, el) => {
+                acc += el.price * el.quantity;
+                return acc;
+            }, 0);
         }
     },
     actions: {
-        onAddCart(product: Product){
+        onAddCart(product: Product) {
             const findProdut = this.productsCart.find((prod) => prod.id === product.id);
             if (findProdut) {
                 const newState = this.productsCart.map((prod) => prod.id === findProdut.id ? { ...findProdut, quantity: findProdut.quantity += 1 } : prod)
@@ -33,15 +46,15 @@ export const useStore = defineStore('cart', {
         onPlusItemQuantity(product: Product) {
             const findProdut = this.productsCart.find((prod) => prod.id === product.id);
             if (!findProdut) return;
-            const newState = this.productsCart.map((prod)=>prod.id === findProdut.id ? {...findProdut, quantity: findProdut.quantity +=1 } : prod )
+            const newState = this.productsCart.map((prod) => prod.id === findProdut.id ? { ...findProdut, quantity: findProdut.quantity += 1 } : prod)
             // localStorage.setItem('cart', JSON.stringify(newState));
             this.productsCart = newState;
         },
-        onMinusItemQuantity(product: Product){
+        onMinusItemQuantity(product: Product) {
             const findProdut = this.productsCart.find((prod) => prod.id === product.id);
             if (!findProdut) return;
 
-             if (findProdut.quantity > 1) {
+            if (findProdut.quantity > 1) {
                 const newState = this.productsCart.map((prod) => prod.id === findProdut.id ? { ...findProdut, quantity: findProdut.quantity -= 1 } : prod)
                 // localStorage.setItem('cart', JSON.stringify(newState));
                 this.productsCart = newState;
@@ -52,5 +65,5 @@ export const useStore = defineStore('cart', {
                 this.productsCart = newState;
             }
         }
-    }
+    },
 })
