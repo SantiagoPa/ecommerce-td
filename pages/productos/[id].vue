@@ -3,6 +3,7 @@ import ProductDetail from '@/components/products/ProductDetail.vue';
 import { useProducts } from '@/composable/useProducts';
 import type { Product } from '@/types/products';
 import { useToast } from '@/composable/useToast';
+import { useStore } from '~/store/useStore';
 
 // Obtener el ID de la ruta
 const route = useRoute()
@@ -10,6 +11,7 @@ const productId = route.params.id
 
 // Composable de productos
 const { getProductById } = useProducts()
+const { onAddCart } = useStore();
 
 // Obtener producto específico con SSR
 const { data: product, error, pending } = await getProductById(productId as string)
@@ -41,14 +43,9 @@ useHead({
 const isAuthenticated = ref(true)
 
 // Manejar agregar al carrito
-const handleAddToCart = (product: Product) => {
-    console.log('Agregar al carrito:', product)
-    // Aquí usarías tu Pinia store y toast
-    // const cartStore = useCartStore()
-    // const toast = useToast()
+const onAddToCart = (product: Product) => {
     const toast = useToast();
-
-    // cartStore.addItem(prod)
+    onAddCart(product);
     toast.success('Producto agregado', 'El producto se agregó al carrito correctamente')
 }
 
@@ -60,7 +57,7 @@ const handleAddToCart = (product: Product) => {
             :product="product" 
             :is-loading="pending" 
             :is-authenticated="isAuthenticated"
-            @add-to-cart="handleAddToCart" 
+            @add-to-cart="onAddToCart" 
         />
     </div>
 </template>

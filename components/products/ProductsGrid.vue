@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ShoppingCart, Heart } from 'lucide-vue-next'
+import { ShoppingCart } from 'lucide-vue-next'
 import SkeletonProducts from './SkeletonProducts.vue'
 import ProductsHeader from './ProductsHeader.vue'
 import type { Product } from '@/types/products';
-import Pagination from '../Pagination.vue';
+import ProductItem from './ProductItem.vue';
 
 
 const props = withDefaults(defineProps<{
@@ -25,18 +25,6 @@ const addToCart = (product: Product) => {
     emit('addToCart', product);
 }
 
-// Calcular precio con descuento para miembros
-const getDiscountedPrice = (price: number): number => {
-    return props.isAuthenticated ? price * 0.85 : price
-}
-
-const formatPrice = (price: number): string => {
-    return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0
-    }).format(price)
-}
 </script>
 
 <template>
@@ -55,53 +43,11 @@ const formatPrice = (price: number): string => {
                 <article v-for="product in products" :key="product.id"
                     class="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:border-primary/50">
                     <!-- Image Container -->
-                    <NuxtLink :to="`/productos/${product.id}`"
-                        class="block relative aspect-square overflow-hidden bg-muted">
-                        <img :src="product.images[0]" :alt="product.title"
-                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            loading="lazy" />
-
-                        <!-- Member Badge -->
-                        <div v-if="isAuthenticated"
-                            class="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                            -15%
-                        </div>
-                    </NuxtLink>
-
-                    <!-- Card Content -->
-                    <div class="p-4 space-y-3">
-                        <!-- Category -->
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                                {{ product.category.name }}
-                            </span>
-                        </div>
-
-                        <!-- Title -->
-                        <NuxtLink :to="`/productos/${product.id}`">
-                            <h3
-                                class="font-semibold text-base leading-tight line-clamp-2 hover:text-primary transition-colors">
-                                {{ product.title }}
-                            </h3>
-                        </NuxtLink>
-
-                        <!-- Price -->
-                        <div class="flex items-baseline gap-2">
-                            <span v-if="isAuthenticated" class="text-sm text-muted-foreground line-through">
-                                {{ formatPrice(product.price) }}
-                            </span>
-                            <span class="text-xl font-bold text-foreground">
-                                {{ formatPrice(getDiscountedPrice(product.price)) }}
-                            </span>
-                        </div>
-
-                        <!-- Add to Cart Button -->
-                        <button @click="addToCart(product)"
-                            class="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 shadow hover:shadow-md active:scale-95 transition-transform">
-                            <ShoppingCart :size="18" />
-                            <span>Agregar al carrito</span>
-                        </button>
-                    </div>
+                    <ProductItem
+                        :product="product"
+                        :is-authenticated="isAuthenticated"
+                        :add-to-cart="addToCart"
+                    />
                 </article>
             </div>
 

@@ -18,7 +18,8 @@ const emit = defineEmits<{
     pageChange: [page: number]
 }>()
 
-const currentPageRef = toRef(props, 'currentPage')
+const currentPageRef = toRef(props, 'currentPage');
+const hasProductsRef = toRef(props, 'hasProducts');
 
 const {
     paginationRange,
@@ -74,7 +75,7 @@ const {
 
             <!-- Next Button -->
             <li>
-                <button @click="goToNext" :disabled="!canGoNext || !hasProducts"
+                <button @click="goToNext" :disabled="!canGoNext || !hasProductsRef"
                     :aria-label="canGoNext ? 'Ir a página siguiente' : 'No hay página siguiente'"
                     class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
                     <ChevronRight :size="16" />

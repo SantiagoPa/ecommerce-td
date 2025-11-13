@@ -5,6 +5,7 @@ import { useProducts } from '@/composable/useProducts';
 import type { Product } from '@/types/products';
 import Pagination from '@/components/Pagination.vue';
 import { useToast } from '@/composable/useToast';
+import { useStore } from '~/store/useStore';
 
 // SEO Meta tags
 useHead({
@@ -26,6 +27,8 @@ const isLoading = ref(false);
 
 // Composable de productos
 const { getProducts } = useProducts();
+
+const store = useStore();
 
 // Obtener productos con SSR - esto se ejecuta en el servidor
 isLoading.value = true;
@@ -61,11 +64,9 @@ const totalPages = computed(() => {
 })
 
 const addToCart = (product: Product) => {
-    console.log({ product });
     const toast = useToast();
-
-    // cartStore.addItem(prod)
-    toast.success('Producto agregado', 'El producto se agregó al carrito correctamente')
+    store.onAddCart(product);
+    toast.success('Producto agregado', `El producto ${product.title} se agregó al carrito correctamente`)
 }
 
 </script>
@@ -91,8 +92,12 @@ const addToCart = (product: Product) => {
         </div>
 
         <!-- Products Section -->
-        <ProductsGrid v-else :products="products || []" :is-loading="isLoading" :is-authenticated="isAuthenticated"
-            @add-to-cart="addToCart" />
+        <ProductsGrid v-else 
+            :products="products || []" 
+            :is-loading="isLoading" 
+            :is-authenticated="isAuthenticated"
+            @add-to-cart="addToCart" 
+        />
 
         <!-- Pagination -->
         <div v-if="!pending && !error && products" class="container mx-auto px-4 pb-16">
