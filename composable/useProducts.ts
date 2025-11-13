@@ -10,7 +10,6 @@ export interface ProductsResponse {
 
 // Composable para obtener productos con paginación
 export const useProducts = () => {
-  const config = useRuntimeConfig()
   const apiBaseUrl = 'https://api.escuelajs.co/api/v1'
 
   // Obtener lista de productos con paginación

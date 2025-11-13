@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-vue-next'
+import { usePagination } from '~/composable/usePagination';
+import { cn } from '~/lib/utils';
 
 const props = withDefaults(defineProps<{
     currentPage: number
     totalPages: number
+    hasProducts: boolean;
     siblingCount?: number
     showFirstLast?: boolean
 }>(), {
@@ -16,73 +18,21 @@ const emit = defineEmits<{
     pageChange: [page: number]
 }>()
 
-// Generar rango de números
-const range = (start: number, end: number): number[] => {
-    const length = end - start + 1
-    return Array.from({ length }, (_, i) => start + i)
-}
+const currentPageRef = toRef(props, 'currentPage')
 
-// Calcular items de paginación
-const paginationRange = computed(() => {
-    const totalPageNumbers = props.siblingCount + 5 // siblingCount + firstPage + lastPage + currentPage + 2*DOTS
-
-    // Si el total de páginas es menor que los números que queremos mostrar
-    if (totalPageNumbers >= props.totalPages) {
-        return range(1, props.totalPages)
-    }
-
-    const leftSiblingIndex = Math.max(props.currentPage - props.siblingCount, 1)
-    const rightSiblingIndex = Math.min(props.currentPage + props.siblingCount, props.totalPages)
-
-    const shouldShowLeftDots = leftSiblingIndex > 2
-    const shouldShowRightDots = rightSiblingIndex < props.totalPages - 2
-
-    const firstPageIndex = 1
-    const lastPageIndex = props.totalPages
-
-    // No hay dots a la izquierda, pero sí a la derecha
-    if (!shouldShowLeftDots && shouldShowRightDots) {
-        const leftItemCount = 3 + 2 * props.siblingCount
-        const leftRange = range(1, leftItemCount)
-        return [...leftRange, 'dots', props.totalPages]
-    }
-
-    // Hay dots a la izquierda, pero no a la derecha
-    if (shouldShowLeftDots && !shouldShowRightDots) {
-        const rightItemCount = 3 + 2 * props.siblingCount
-        const rightRange = range(props.totalPages - rightItemCount + 1, props.totalPages)
-        return [firstPageIndex, 'dots', ...rightRange]
-    }
-
-    // Hay dots en ambos lados
-    if (shouldShowLeftDots && shouldShowRightDots) {
-        const middleRange = range(leftSiblingIndex, rightSiblingIndex)
-        return [firstPageIndex, 'dots', ...middleRange, 'dots', lastPageIndex]
-    }
-
-    return []
-})
-
-const canGoPrevious = computed(() => props.currentPage > 1)
-const canGoNext = computed(() => props.currentPage < props.totalPages)
-
-const goToPage = (page: number) => {
-    if (page >= 1 && page <= props.totalPages && page !== props.currentPage) {
-        emit('pageChange', page)
-    }
-}
-
-const goToPrevious = () => {
-    if (canGoPrevious.value) {
-        goToPage(props.currentPage - 1)
-    }
-}
-
-const goToNext = () => {
-    if (canGoNext.value) {
-        goToPage(props.currentPage + 1)
-    }
-}
+const {
+    paginationRange,
+    canGoNext,
+    canGoPrevious,
+    goToPrevious,
+    goToNext,
+    goToPage,
+} = usePagination({ 
+    siblingCount: props.siblingCount, 
+    totalPages: props.totalPages, 
+    currentPage: currentPageRef, 
+    emit }
+);
 
 </script>
 
@@ -93,7 +43,10 @@ const goToNext = () => {
             <li>
                 <button @click="goToPrevious" :disabled="!canGoPrevious"
                     :aria-label="canGoPrevious ? 'Ir a página anterior' : 'No hay página anterior'"
-                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
+                    :class="cn(
+                        'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9',
+                        `${ !canGoPrevious ? 'text-gray-500 cursor-not-allowed' : ''}`
+                    )">
                     <ChevronLeft :size="16" />
                 </button>
             </li>
@@ -121,7 +74,7 @@ const goToNext = () => {
 
             <!-- Next Button -->
             <li>
-                <button @click="goToNext" :disabled="!canGoNext"
+                <button @click="goToNext" :disabled="!canGoNext || !hasProducts"
                     :aria-label="canGoNext ? 'Ir a página siguiente' : 'No hay página siguiente'"
                     class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
                     <ChevronRight :size="16" />

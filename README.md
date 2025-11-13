@@ -1,6 +1,7 @@
-# Nuxt Minimal Starter
+# Ecommerce TD
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+1. clone repository: `git clone https://github.com/SantiagoPa/ecommerce-td.git`
 
 ## Setup
 

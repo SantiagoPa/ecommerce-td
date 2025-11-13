@@ -34,14 +34,14 @@ const { data: products, error, pending, refresh } = await getProducts(
     itemsPerPage.value
 )
 isLoading.value = false;
-console.log({ products: products.value });
 // Simular autenticación (esto vendría de tu auth store)
 const isAuthenticated = ref(false)
 
 // Manejar cambio de página
 const handlePageChange = async (page: number) => {
+    console.log({ currentPage: currentPage.value, page });
     currentPage.value = page
-
+    console.log({ currentPage: currentPage.value, page });
     // Recargar productos con nueva página
     const { data: newProducts } = await getProducts(page, itemsPerPage.value)
 
@@ -95,9 +95,14 @@ const addToCart = (product: Product) => {
             @add-to-cart="addToCart" />
 
         <!-- Pagination -->
-        <div v-if="!pending && !error" class="container mx-auto px-4 pb-16">
-            <Pagination :current-page="currentPage" :total-pages="totalPages" :sibling-count="1"
-                @page-change="handlePageChange" />
+        <div v-if="!pending && !error && products" class="container mx-auto px-4 pb-16">
+            <Pagination 
+                :current-page="currentPage" 
+                :total-pages="6" 
+                :sibling-count="1"
+                :has-products="products?.length > 0"
+                @page-change="handlePageChange" 
+            />
         </div>
     </div>
 </template>

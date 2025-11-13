@@ -3,6 +3,7 @@ import { useToast } from '@/composable/useToast';
 import ToastItem from './ToastItem.vue';
 
 const { toasts, removeToast } = useToast();
+
 </script>
 
 <template>
