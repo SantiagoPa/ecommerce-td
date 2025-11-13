@@ -14,7 +14,6 @@ const productId = route.params.id
 // Composable de productos
 const { getProductById } = useProducts();
 const { onAddCart } = useStore();
-const { isAuthenticated } = useProfile();
 
 // Obtener producto específico con SSR
 const { data: product, error, pending } = await getProductById(productId as string)
@@ -52,7 +51,8 @@ const onAddToCart = (product: Product) => {
 
 <template>
     <div>
-        <ProductDetail :product="product" :is-loading="pending" @add-to-cart="onAddToCart"
-            :is-authenticated="isAuthenticated" />
+         <ClientOnly fallback-tag="div">
+             <ProductDetail :product="product" :is-loading="pending" @add-to-cart="onAddToCart" />
+         </ClientOnly>
     </div>
 </template>

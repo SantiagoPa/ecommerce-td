@@ -2,6 +2,12 @@
 import { useProfile } from '~/composable/useProfile';
 
 const { isAuthenticated } = useProfile();
+
+// Computed para el mensaje del descuento
+const discountMessage = computed(() => {
+    return isAuthenticated.value ? '15% OFF para miembros' : '';
+});
+
 </script>
 
 <template>
@@ -12,9 +18,11 @@ const { isAuthenticated } = useProfile();
         </h2>
         <p class="text-muted-foreground text-base md:text-lg">
             Descubre nuestra colección exclusiva
-            <span v-if="isAuthenticated" class="inline-flex items-center gap-1 ml-2 text-primary font-medium">
-                <span class="text-sm px-2 py-0.5 rounded-full text-indigo-800">15% OFF para miembros</span>
-            </span>
+            <ClientOnly fallback-tag="span">
+                <span class="text-sm px-2 py-0.5 rounded-full text-indigo-800">
+                    {{ discountMessage }}
+                </span>
+            </ClientOnly>
         </p>
     </div>
 </template>

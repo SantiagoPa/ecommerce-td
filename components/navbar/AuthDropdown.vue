@@ -3,12 +3,8 @@ import { UserLock, LogOut } from 'lucide-vue-next'
 import Separator from '../core/Separator.vue'
 import { useProfile } from '~/composable/useProfile';
 
-
-
 const route = useRoute()
-const { signIn, signOut } = useAuth();
-const {  status, session } = useProfile();
-
+const { status, session, signIn, signOut } = useProfile();
 
 const isOpen = ref(false)
 const isLoading = ref(false)
@@ -27,7 +23,7 @@ const handleSignIn = async (provider: 'google' | 'github') => {
     
     try {
         await signIn(provider, {
-            callbackUrl: route.fullPath, // Redirigir a la página actual
+            callbackUrl: route.fullPath,
             redirect: true
         })
     } catch (error) {
@@ -39,7 +35,7 @@ const handleSignIn = async (provider: 'google' | 'github') => {
 
 const handleSignOut = async () => {
     isLoading.value = true
-    closeDropdown()    
+    closeDropdown()
     try {
         await signOut({
             callbackUrl: '/',
@@ -66,27 +62,26 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEscape)
 })
+
+// Computed para el texto del botón
+const buttonText = computed(() => {
+    if (isLoading.value) return 'Cargando...'
+    if (status.value === 'authenticated' && session.value?.user) {
+        return session.value.user.name || 'Usuario'
+    }
+    return 'Iniciar Sesión'
+})
 </script>
 
 <template>
     <div class="relative inline-block text-left">
         <!-- Botón trigger -->
         <button 
-            @click="toggleDropdown"
+            @click="toggleDropdown" 
             :disabled="isLoading"
-            class="w-full inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed">
-            <UserLock :class="{ 'animate-pulse': isLoading }" />
-            <div v-if="status">
-                <span v-if="status === 'authenticated' && session?.user">
-                    {{ session.user.name || session.user.email }}
-                </span>
-            </div>
-            <span v-else-if="isLoading">
-                Cargando...
-            </span>
-            <span v-else>
-                Iniciar Sesión
-            </span>
+            class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed">
+            <UserLock :size="20" :class="{ 'animate-pulse': isLoading }" />
+            <span>{{ buttonText }}</span>
         </button>
 
         <!-- Dropdown Menu -->
@@ -101,15 +96,14 @@ onUnmounted(() => {
                 v-if="isOpen"
                 class="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-md border border-border bg-popover shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div class="py-1" role="menu">
-                    
                     <!-- Usuario autenticado -->
                     <div v-if="status === 'authenticated' && session?.user" class="px-4 py-3">
                         <div class="flex items-center gap-3">
                             <img 
                                 v-if="session.user.image" 
-                                :src="session.user.image" 
-                                :alt="session.user.name || 'Avatar'"
-                                class="w-10 h-10 rounded-full"
+                                :src="session.user.image"
+                                :alt="session.user.name || 'Avatar'" 
+                                class="w-10 h-10 rounded-full" 
                             />
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-foreground truncate">

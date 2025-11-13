@@ -14,7 +14,6 @@ import { useProfile } from '~/composable/useProfile';
 const props = withDefaults(defineProps<{
     product: Product | null
     isLoading?: boolean
-    isAuthenticated: boolean
 }>(), {
     isLoading: false,
 })
@@ -23,6 +22,8 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
     addToCart: [product: Product]
 }>();
+
+const { isAuthenticated } = useProfile();
 
 
 const {
@@ -36,13 +37,36 @@ const {
     decreaseQuantity,
     addToCart,
     goBack,
-} = useProductDetail({ product: props.product, isAuthenticated: props.isAuthenticated , emit });
+} = useProductDetail({ product: props.product, isAuthenticated: isAuthenticated.value, emit });
 
 const { productsCart } = storeToRefs(useStore());
 
 const oProductCart = computed(() => {
     if (!props.product) return undefined;
     return productsCart.value.find((prod) => prod.id === props.product?.id);
+});
+
+const discountMessage = computed(() => {
+    return isAuthenticated.value ? '-15%' : '';
+});
+
+const formatPriceSavingMessage = computed(() => {
+    return isAuthenticated.value ? formatPrice(savings.value) : ''
+});
+
+const priceMemberMessage = computed(() => {
+    return isAuthenticated.value ? "Precio exclusivo para miembros" : ""
+});
+
+const formatPriceMessage = computed(() => {
+    return isAuthenticated.value && props.product ? formatPrice(props.product.price) : '';
+});
+
+const formatPriceMessageDisccount = computed(() => {
+    if (!props.product) return ''
+    return isAuthenticated.value
+        ? formatPrice(getDiscountedPrice(props.product.price, isAuthenticated.value))
+        : formatPrice(getDiscountedPrice(props.product.price, false))
 });
 
 </script>
@@ -70,10 +94,14 @@ const oProductCart = computed(() => {
                         <img :src="currentImage" :alt="oProductCart.title" class="w-full h-full object-cover" />
 
                         <!-- Member Badge -->
-                        <div v-if="isAuthenticated"
+                        <div
                             class="absolute top-4 right-4 bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
-                            <span>-15%</span>
+                            <ClientOnly fallback-tag="span">
+                                <span>
+                                    {{ discountMessage }}
+                                </span>
+                            </ClientOnly>
                         </div>
 
                         <!-- Navigation Arrows -->
@@ -126,27 +154,35 @@ const oProductCart = computed(() => {
                     </h1>
 
                     <!-- Member Benefit Message -->
-                    <div v-if="isAuthenticated"
-                        class="p-4 rounded-lg bg-indigo-700/90 text-white  border border-indigo-700/20">
+                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white  border border-indigo-700/20">
                         <p class="text-sm font-medium text-primary flex items-center gap-2 ">
                             <Tag :size="16" />
-                            <span>Como miembro, ahorras {{ formatPrice(savings) }} en este producto</span>
+                            <ClientOnly fallback-tag="span">
+                                <span>Como miembro, ahorras {{ formatPriceSavingMessage }} en este producto</span>
+                            </ClientOnly>
                         </p>
                     </div>
 
                     <!-- Price -->
                     <div class="space-y-2">
                         <div class="flex items-baseline gap-3">
-                            <span v-if="isAuthenticated" class="text-xl text-muted-foreground line-through">
-                                {{ formatPrice(oProductCart.price) }}
-                            </span>
-                            <span class="text-4xl font-bold text-foreground">
-                                {{ formatPrice(getDiscountedPrice(oProductCart.price, isAuthenticated)) }}
-                            </span>
+                            <ClientOnly fallback-tag="span">
+                                <span class="text-xl text-muted-foreground line-through">
+                                    {{ formatPriceMessage }}
+                                </span>
+                            </ClientOnly>
+
+                            <ClientOnly fallback-tag="span">
+                                <span class="text-4xl font-bold text-foreground">
+                                    {{ formatPriceMessageDisccount }}
+                                </span>
+                            </ClientOnly>
                         </div>
-                        <p v-if="isAuthenticated" class="text-sm text-muted-foreground fond-bold">
-                            Precio exclusivo para miembros
-                        </p>
+                        <ClientOnly fallback-tag="p">
+                            <p class="text-sm text-muted-foreground fond-bold">
+                                {{ priceMemberMessage }}
+                            </p>
+                        </ClientOnly>
                     </div>
 
                     <Separator class="my-6" />
@@ -207,6 +243,7 @@ const oProductCart = computed(() => {
             </div>
         </div>
 
+
         <!-- Product Content -->
         <div v-else-if="product" class="container mx-auto px-4 py-8">
             <!-- Back Button -->
@@ -224,10 +261,12 @@ const oProductCart = computed(() => {
                         <img :src="currentImage" :alt="product.title" class="w-full h-full object-cover" />
 
                         <!-- Member Badge -->
-                        <div v-if="isAuthenticated"
+                        <div
                             class="absolute top-4 right-4  bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
-                            <span>-15%</span>
+                            <ClientOnly fallback-tag="p">
+                                <span>{{ discountMessage }}</span>
+                            </ClientOnly>
                         </div>
 
                         <!-- Navigation Arrows -->
@@ -279,27 +318,35 @@ const oProductCart = computed(() => {
                     </h1>
 
                     <!-- Member Benefit Message -->
-                    <div v-if="isAuthenticated"
-                        class="p-4 rounded-lg bg-indigo-700/90 text-white border border-indigo-700/20">
+                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white border border-indigo-700/20">
                         <p class="text-sm font-medium text-primary flex items-center gap-2 ">
                             <Tag :size="16" />
-                            <span>Como miembro, ahorras {{ formatPrice(savings) }} en este producto</span>
+                            <ClientOnly fallback-tag="span">
+                                <span>Como miembro, ahorras {{ formatPriceSavingMessage }} en este producto</span>
+                            </ClientOnly>
                         </p>
                     </div>
 
                     <!-- Price -->
                     <div class="space-y-2">
                         <div class="flex items-baseline gap-3">
-                            <span v-if="isAuthenticated" class="text-xl text-muted-foreground line-through">
-                                {{ formatPrice(product.price) }}
-                            </span>
-                            <span class="text-4xl font-bold text-foreground">
-                                {{ formatPrice(getDiscountedPrice(product.price, isAuthenticated)) }}
-                            </span>
+                            <ClientOnly fallback-tag="span">
+                                <span class="text-xl text-muted-foreground line-through">
+                                    {{ formatPriceMessage }}
+                                </span>
+                            </ClientOnly>
+
+                            <ClientOnly fallback-tag="span">
+                                <span class="text-4xl font-bold text-foreground">
+                                    {{ formatPriceMessageDisccount }}
+                                </span>
+                            </ClientOnly>
                         </div>
-                        <p v-if="isAuthenticated" class="text-sm text-muted-foreground fond-bold">
-                            Precio exclusivo para miembros
-                        </p>
+                        <ClientOnly fallback-tag="p">
+                            <p class="text-sm text-muted-foreground fond-bold">
+                                {{ priceMemberMessage }}
+                            </p>
+                        </ClientOnly>
                     </div>
 
                     <Separator class="my-6" />

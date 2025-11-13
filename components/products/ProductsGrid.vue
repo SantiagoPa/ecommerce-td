@@ -9,7 +9,6 @@ import ProductItem from './ProductItem.vue';
 const props = withDefaults(defineProps<{
     products: Product[]
     isLoading?: boolean
-    isAuthenticated: boolean;
 }>(), {
     isLoading: false,
 })
@@ -29,7 +28,7 @@ const addToCart = (product: Product) => {
 <template>
     <section class="w-full py-8 md:py-12 lg:py-16">
         <div class="container mx-auto px-4">
-
+            
             <ProductsHeader  />
 
             <!-- Loading State -->
@@ -45,7 +44,6 @@ const addToCart = (product: Product) => {
                     <ProductItem
                         :product="product"
                         :add-to-cart="addToCart"
-                        :is-authenticated="isAuthenticated"
                     />
                 </article>
             </div>

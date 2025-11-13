@@ -16,9 +16,6 @@ useHead({
     ]
 });
 
-const { isAuthenticated } = useProfile();
-
-
 const {
     currentPage,
     isLoading,
@@ -54,7 +51,7 @@ const {
 
         <!-- Products Section -->
         <div v-else class="col-span-1 lg:col-span-4">
-            <ProductsGrid :products="products || []" :is-loading="isLoading" @add-to-cart="addToCart" :is-authenticated="isAuthenticated" />
+            <ProductsGrid :products="products || []" :is-loading="isLoading" @add-to-cart="addToCart" />
 
             <!-- Pagination -->
             <div v-if="!pending && !error && products" class="container mx-auto px-4 pb-16">

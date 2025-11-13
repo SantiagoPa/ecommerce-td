@@ -3,13 +3,21 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
     modules: [
-        '@nuxt/image', 
-        '@nuxtjs/tailwindcss', 
-        '@pinia/nuxt', 
+        '@nuxt/image',
+        '@nuxtjs/tailwindcss',
+        '@pinia/nuxt',
         '@sidebase/nuxt-auth'
     ],
-    // Configuración de SSR
-    // ssr: true,
+
+    auth: {
+        provider: {
+            type: 'authjs',
+        },
+        // Agregar estas configuraciones
+        globalAppMiddleware: {
+            isEnabled: false // Deshabilita el middleware global si no lo necesitas
+        }
+    },
     pinia: {
         /**
          * Automatically add stores dirs to the auto imports. This is the same as
@@ -34,12 +42,6 @@ export default defineNuxtConfig({
             meta: [
                 { name: 'description', content: 'Tienda online con los mejores productos' }
             ]
-        }
-    },
-
-    auth: {
-        provider: {
-            type: 'authjs',
         }
     },
 
