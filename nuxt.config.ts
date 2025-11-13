@@ -6,8 +6,9 @@ export default defineNuxtConfig({
         '@nuxt/image',
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
+        'pinia-plugin-persistedstate/nuxt',
         '@sidebase/nuxt-auth'
-    ],
+    ],  
 
     auth: {
         provider: {
@@ -18,6 +19,9 @@ export default defineNuxtConfig({
             isEnabled: false // Deshabilita el middleware global si no lo necesitas
         }
     },
+    piniaPluginPersistedstate: {
+        storage: 'localStorage',
+    },
     pinia: {
         /**
          * Automatically add stores dirs to the auto imports. This is the same as
@@ -27,7 +31,7 @@ export default defineNuxtConfig({
          *
          * @default `['stores']`
          */
-        storesDirs: [`./stores/**`]
+        storesDirs: [`./stores/**`],
     },
     // Optimizaciones
     nitro: {

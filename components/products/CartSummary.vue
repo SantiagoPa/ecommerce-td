@@ -1,10 +1,27 @@
 <script setup lang="ts">
 import { BanknoteArrowUp, PackagePlus, StoreIcon } from 'lucide-vue-next';
+import { useProfile } from '~/composable/useProfile';
+import { getDiscountedPrice } from '~/lib/discountedPrice';
 import { formatPrice } from '~/lib/formatPrice';
 import { useStore } from '~/store/useStore';
+import type { Product } from '~/types/products';
 
-const { getTotalItems, getProductsCart, getTotalPrices } = storeToRefs(useStore());
+
+const { isAuthenticated } = useProfile();
+const { getTotalItems, getProductsCart } = storeToRefs(useStore());
 const { onPlusItemQuantity, onMinusItemQuantity } = useStore();
+
+const formatPriceMessageDisccount = computed(() => {
+    return (product: Product) => isAuthenticated.value
+        ? formatPrice(getDiscountedPrice(product.price, isAuthenticated.value))
+        : formatPrice(getDiscountedPrice(product.price, false))
+});
+
+const priceMessageDisccount = computed(()=>{
+    return (product: Product) => isAuthenticated.value
+    ? getDiscountedPrice(product.price, isAuthenticated.value)
+    : getDiscountedPrice(product.price, false)
+})
 
 </script>
 
@@ -31,34 +48,29 @@ const { onPlusItemQuantity, onMinusItemQuantity } = useStore();
                     </span>
                     <PackagePlus />
                 </span>
-                <span class="">{{ formatPrice(product.price) }} x {{ product.quantity }}</span>
+                <span class="">{{ formatPriceMessageDisccount(product) }} x {{ product.quantity }}</span>
                 <span class="flex flex-row font-bold justify-center text-center gap-2">
                     <BanknoteArrowUp />
                     <span>
-                        {{ formatPrice(product.price * product.quantity) }}
+                        {{ formatPrice(priceMessageDisccount(product) * product.quantity) }}
                     </span>
                 </span>
                 <div class="flex  justify-center items-center gap-4 mb-2 mt-2">
                     <div class="flex items-center border rounded-md">
-                        <button @click="onMinusItemQuantity(product)" 
+                        <button @click="onMinusItemQuantity(product)"
                             class="px-2 py-1 hover:bg-accent transition-colors rounded-l-md">
                             -
                         </button>
                         <span class="px-2 py-1 border-x font-medium min-w-[30px] text-center">
                             {{ product.quantity }}
                         </span>
-                        <button @click="onPlusItemQuantity(product)" class="px-2 py-1 hover:bg-accent transition-colors rounded-r-md">
+                        <button @click="onPlusItemQuantity(product)"
+                            class="px-2 py-1 hover:bg-accent transition-colors rounded-r-md">
                             +
                         </button>
                     </div>
                 </div>
             </div>
-        </article>
-
-        <article class="bg-gray-50 flex flex-col gap-5 mt-5 p-2" v-if="getTotalPrices > 0">
-            <h1 class="text-center text-green-500 flex flex-row justify-center gap-1">
-                <BanknoteArrowUp /> {{ formatPrice(getTotalPrices) }}
-            </h1>
         </article>
     </div>
 </template>

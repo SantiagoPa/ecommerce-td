@@ -1,16 +1,12 @@
 
 import { defineStore } from 'pinia'
-import { usePersisted } from '~/composable/usePersisted'
 import type { ProductCart, StateStoreCart } from '~/types/cart'
 import type { Product } from '~/types/products'
 
 export const useStore = defineStore('cart', {
-    state: (): StateStoreCart => {
-        // Cargar datos del localStorage al inicializar usando el composable
-        const { loadFromStorage } = usePersisted("cart-store");
-        const stored = loadFromStorage() as { productsCart: ProductCart[] }
-        return stored || { productsCart: [] }
-    },
+    state: (): StateStoreCart => ({
+        productsCart: []
+    }),
     getters: {
         getProductsCart: (state): ProductCart[] => state.productsCart,
         getTotalItems: (state): number => {
@@ -65,4 +61,8 @@ export const useStore = defineStore('cart', {
             }
         }
     },
+    // persist: {
+    //     key: 'cart-store',
+    //     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    // },
 })
