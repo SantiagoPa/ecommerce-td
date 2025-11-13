@@ -28,9 +28,7 @@ isLoading.value = false;
 
 // Manejar cambio de página
 const handlePageChange = async (page: number) => {
-    console.log({ currentPage: currentPage.value, page });
     currentPage.value = page
-    console.log({ currentPage: currentPage.value, page });
     // Recargar productos con nueva página
     const { data: newProducts } = await getProducts(page, itemsPerPage.value)
 

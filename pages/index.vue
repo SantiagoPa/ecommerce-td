@@ -3,7 +3,6 @@ import ProductsGrid from '@/components/products/ProductsGrid.vue';
 import Pagination from '@/components/Pagination.vue';
 import { useProductPage } from '~/composable/useProductPage';
 import CartSummary from '~/components/products/CartSummary.vue';
-import { useProfile } from '~/composable/useProfile';
 
 // SEO Meta tags
 useHead({

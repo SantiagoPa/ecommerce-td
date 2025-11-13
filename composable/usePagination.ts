@@ -1,4 +1,4 @@
-import { computed, type Ref, unref } from 'vue'
+import { computed, type Ref } from 'vue'
 
 interface Props {
     siblingCount: number;

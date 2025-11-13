@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ShoppingCart, Menu, X, Store, UserLock } from 'lucide-vue-next'
+import { ShoppingCart, Menu, X, Store } from 'lucide-vue-next'
 import Badge from '../core/Badge.vue'
 import { useNavbar } from '~/composable/useNavbar';
 import { useStore } from '~/store/useStore';
