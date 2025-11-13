@@ -3,10 +3,11 @@
 
 
 ## Setup
-1. clone repository: `git clone https://github.com/SantiagoPa/ecommerce-td.git`
-2. install dependencies: `npm install`
-3. run develop mode: `npm run dev`
-4. run preview mode: `npm run build && npm run preview`
+1. clonar repositorio: `git clone https://github.com/SantiagoPa/ecommerce-td.git`
+2. instalar dependencias: `npm install`
+3. copiar `.env.example` y renombralo `.env` y generar los CLIENT_SECRET y CLIENT_ID para google y github
+4. run develop mode: `npm run dev`
+5. run preview mode: `npm run build && npm run preview`
 
 
 ## preview app
