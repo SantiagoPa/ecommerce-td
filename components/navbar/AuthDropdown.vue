@@ -38,7 +38,7 @@ const handleSignOut = async () => {
     closeDropdown()
     try {
         await signOut({
-            callbackUrl: '/',
+            callbackUrl: route.fullPath,
             redirect: true
         })
     } catch (error) {

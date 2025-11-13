@@ -7,18 +7,9 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt',
-        '@sidebase/nuxt-auth'
-    ],  
-
-    auth: {
-        provider: {
-            type: 'authjs',
-        },
-        // Agregar estas configuraciones
-        globalAppMiddleware: {
-            isEnabled: false // Deshabilita el middleware global si no lo necesitas
-        }
-    },
+        // '@sidebase/nuxt-auth'
+        'nuxt-auth-utils'
+    ],
     piniaPluginPersistedstate: {
         storage: 'localStorage',
     },
@@ -49,13 +40,26 @@ export default defineNuxtConfig({
         }
     },
 
+    // runtimeConfig: {
+    //     // Variables privadas (solo servidor)
+    //     authSecret: process.env.AUTH_SECRET,
+    //     googleClientId: process.env.GOOGLE_CLIENT_ID,
+    //     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    //     githubClientId: process.env.GITHUB_CLIENT_ID,
+    //     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+    // },
     runtimeConfig: {
-        // Variables privadas (solo servidor)
-        authSecret: process.env.AUTH_SECRET,
-        googleClientId: process.env.GOOGLE_CLIENT_ID,
-        googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        githubClientId: process.env.GITHUB_CLIENT_ID,
-        githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+        // OAuth Secrets (privadas)
+        oauth: {
+            google: {
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            },
+            github: {
+                clientId: process.env.GITHUB_CLIENT_ID,
+                clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            }
+        }
     },
 
 

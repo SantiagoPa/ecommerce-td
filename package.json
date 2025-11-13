@@ -8,18 +8,17 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "clean": "rm -rf .nuxt .output node_modules/.cache",
-    "fresh": "npm run clean && npm run dev"
+    "dev:clean": "rm -rf .nuxt node_modules/.cache && nuxt dev",
+    "clean": "rm -rf .nuxt node_modules/.cache .output"
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@pinia/nuxt": "^0.11.3",
-    "@sidebase/nuxt-auth": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "lucide-vue-next": "^0.553.0",
-    "next-auth": "^4.21.1",
     "nuxt": "^3.20.1",
+    "nuxt-auth-utils": "^0.5.25",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "tailwind-merge": "^3.4.0",
