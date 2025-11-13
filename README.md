@@ -1,43 +1,13 @@
 # Ecommerce TD
 
 
-1. clone repository: `git clone https://github.com/SantiagoPa/ecommerce-td.git`
 
 ## Setup
+1. clone repository: `git clone https://github.com/SantiagoPa/ecommerce-td.git`
+2. install dependencies: `npm install`
+3. run develop mode: `npm run dev`
+4. run preview mode: `npm run build && npm run preview`
 
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
 
 ## Production
 
@@ -57,20 +27,3 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
