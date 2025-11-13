@@ -4,7 +4,6 @@ import { useProducts } from '@/composable/useProducts';
 import type { Product } from '@/types/products';
 import { useToast } from '@/composable/useToast';
 import { useStore } from '~/store/useStore';
-import { useProfile } from '~/composable/useProfile';
 
 
 // Obtener el ID de la ruta
@@ -16,7 +15,7 @@ const { getProductById } = useProducts();
 const { onAddCart } = useStore();
 
 // Obtener producto específico con SSR
-const { data: product, error, pending } = await getProductById(productId as string)
+const { data: product, pending } = await getProductById(productId as string)
 
 // SEO dinámico basado en el producto
 useHead({

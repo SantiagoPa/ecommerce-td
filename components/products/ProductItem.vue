@@ -43,8 +43,7 @@ const formatPriceMessageDisccount = computed(() => {
 
         <!-- Member Badge -->
         <ClientOnly fallback-tag="span">
-            <span
-                class="absolute top-2 right-2 bg-indigo-700/80 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+            <span v-if="discountMessage" class="absolute top-2 right-2 bg-indigo-700/80 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
                 {{ discountMessage }}
             </span>
         </ClientOnly>

@@ -95,6 +95,7 @@ const formatPriceMessageDisccount = computed(() => {
 
                         <!-- Member Badge -->
                         <div
+                            v-if="discountMessage"
                             class="absolute top-4 right-4 bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
                             <ClientOnly fallback-tag="span">
@@ -154,11 +155,11 @@ const formatPriceMessageDisccount = computed(() => {
                     </h1>
 
                     <!-- Member Benefit Message -->
-                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white  border border-indigo-700/20">
+                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white  border border-indigo-700/20" v-if="formatPriceSavingMessage">
                         <p class="text-sm font-medium text-primary flex items-center gap-2 ">
                             <Tag :size="16" />
                             <ClientOnly fallback-tag="span">
-                                <span>Como miembro, ahorras {{ formatPriceSavingMessage }} en este producto</span>
+                                <span> Como miembro, ahorras {{ formatPriceSavingMessage }} en este producto</span>
                             </ClientOnly>
                         </p>
                     </div>
@@ -262,6 +263,7 @@ const formatPriceMessageDisccount = computed(() => {
 
                         <!-- Member Badge -->
                         <div
+                            v-if="discountMessage"
                             class="absolute top-4 right-4  bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
                             <ClientOnly fallback-tag="p">
@@ -318,8 +320,8 @@ const formatPriceMessageDisccount = computed(() => {
                     </h1>
 
                     <!-- Member Benefit Message -->
-                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white border border-indigo-700/20">
-                        <p class="text-sm font-medium text-primary flex items-center gap-2 ">
+                    <div class="p-4 rounded-lg bg-indigo-700/90 text-white border border-indigo-700/20" v-if="formatPriceSavingMessage">
+                        <p class="text-sm font-medium text-primary flex items-center gap-2 " >
                             <Tag :size="16" />
                             <ClientOnly fallback-tag="span">
                                 <span>Como miembro, ahorras {{ formatPriceSavingMessage }} en este producto</span>
