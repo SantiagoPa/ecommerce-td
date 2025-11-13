@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ShoppingCart } from 'lucide-vue-next';
+import { useProfile } from '~/composable/useProfile';
 import { getDiscountedPrice } from '~/lib/discountedPrice';
 import { formatPrice } from '~/lib/formatPrice';
 import { useStore } from '~/store/useStore';
@@ -7,9 +8,10 @@ import type { Product } from '~/types/products';
 
 const props = defineProps<{ 
     product: Product; 
-    isAuthenticated: boolean; 
     addToCart: (product: Product) => void;
+    isAuthenticated: boolean;
 }>()
+
 
 const { productsCart } = storeToRefs(useStore());
 
@@ -29,7 +31,7 @@ const isProductInCart = computed(()=>{
 
         <!-- Member Badge -->
         <div v-if="isAuthenticated"
-            class="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+            class="absolute top-2 right-2 bg-indigo-700/80 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
             -15%
         </div>
     </NuxtLink>

@@ -3,6 +3,7 @@ import ProductsGrid from '@/components/products/ProductsGrid.vue';
 import Pagination from '@/components/Pagination.vue';
 import { useProductPage } from '~/composable/useProductPage';
 import CartSummary from '~/components/products/CartSummary.vue';
+import { useProfile } from '~/composable/useProfile';
 
 // SEO Meta tags
 useHead({
@@ -15,19 +16,19 @@ useHead({
     ]
 });
 
+const { isAuthenticated } = useProfile();
+
+
 const {
     currentPage,
-    itemsPerPage,
     isLoading,
     products,
     error,
     pending,
     refresh,
-    isAuthenticated,
     handlePageChange,
     addToCart
-} = await useProductPage()
-
+} = await useProductPage();
 
 </script>
 
@@ -52,19 +53,18 @@ const {
         </div>
 
         <!-- Products Section -->
-         <div v-else class="col-span-1 lg:col-span-4">
-             <ProductsGrid  :products="products || []" :is-loading="isLoading" :is-authenticated="isAuthenticated"
-                 @add-to-cart="addToCart" />
-     
-             <!-- Pagination -->
-             <div v-if="!pending && !error && products" class="container mx-auto px-4 pb-16">
-                 <Pagination :current-page="currentPage" :total-pages="6" :sibling-count="1"
-                     :has-products="products?.length > 0" @page-change="handlePageChange" />
-             </div>
-         </div>
+        <div v-else class="col-span-1 lg:col-span-4">
+            <ProductsGrid :products="products || []" :is-loading="isLoading" @add-to-cart="addToCart" :is-authenticated="isAuthenticated" />
 
-         <div class="col-span-1 lg:col-span-1">
-             <CartSummary />
-         </div>
+            <!-- Pagination -->
+            <div v-if="!pending && !error && products" class="container mx-auto px-4 pb-16">
+                <Pagination :current-page="currentPage" :total-pages="6" :sibling-count="1"
+                    :has-products="products?.length > 0" @page-change="handlePageChange" />
+            </div>
+        </div>
+
+        <div class="col-span-1 lg:col-span-1">
+            <CartSummary />
+        </div>
     </div>
 </template>

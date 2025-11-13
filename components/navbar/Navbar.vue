@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ShoppingCart, User, Menu, X, Store } from 'lucide-vue-next'
+import { ShoppingCart, Menu, X, Store } from 'lucide-vue-next'
 import Badge from '../core/Badge.vue'
 import { useNavbar } from '~/composable/useNavbar';
 import { useStore } from '~/store/useStore';
+import AuthDropdown from './AuthDropdown.vue';
+
 
 const {
   isMenuOpen,
-  isAuthenticated,
   toggleMenu,
-  toggleAuth,
 } = useNavbar();
 
 const { getUniqItems } = storeToRefs(useStore());
@@ -49,20 +49,15 @@ const { getUniqItems } = storeToRefs(useStore());
           </button>
 
           <!-- Auth Button -->
-          <div v-if="isAuthenticated" class="hidden md:flex items-center gap-2">
-            <Badge>
-              Miembro
-            </Badge>
-            <button @click="toggleAuth"
-              class="inline-flex items-center gap-2 justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4">
-              <User :size="16" />
-              <span>Mi Cuenta</span>
-            </button>
-          </div>
-          <button v-else @click="toggleAuth"
-            class="hidden md:inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4">
-            Iniciar Sesión
-          </button>
+
+          <Badge>
+            Miembro
+          </Badge>
+
+
+          <ClientOnly fallback=" " fallback-tag="div">
+            <AuthDropdown />
+          </ClientOnly>
 
           <!-- Mobile Menu Button -->
           <button @click="toggleMenu"
@@ -86,22 +81,12 @@ const { getUniqItems } = storeToRefs(useStore());
             </NuxtLink>
 
             <div class="border-t border-border/40 pt-4 mt-2">
-              <div v-if="isAuthenticated" class="flex flex-col gap-3">
-                <div class="flex items-center gap-2 px-2">
-                  <Badge>
-                    Miembro
-                  </Badge>
-                  <span class="text-sm font-medium">Mi Cuenta</span>
-                </div>
-                <button @click="toggleAuth"
-                  class="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors text-left px-2 py-1">
-                  Cerrar Sesión
-                </button>
-              </div>
-              <button v-else @click="toggleAuth"
-                class="w-full inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4">
-                Iniciar Sesión
-              </button>
+              <Badge>
+                Miembro
+              </Badge>
+
+              <!-- <AuthDropdown :status="status" :session="session" /> -->
+
             </div>
           </div>
         </div>

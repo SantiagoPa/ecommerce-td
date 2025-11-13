@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
-    modules: ['@nuxt/image', '@nuxtjs/tailwindcss', '@pinia/nuxt'],
+    modules: [
+        '@nuxt/image', 
+        '@nuxtjs/tailwindcss', 
+        '@pinia/nuxt', 
+        '@sidebase/nuxt-auth'
+    ],
     // Configuración de SSR
     // ssr: true,
     pinia: {
@@ -15,12 +20,6 @@ export default defineNuxtConfig({
          * @default `['stores']`
          */
         storesDirs: [`./stores/**`]
-    },
-    // Runtime config
-    runtimeConfig: {
-        public: {
-            apiBase: 'https://api.escuelajs.co/api/v1'
-        }
     },
     // Optimizaciones
     nitro: {
@@ -36,5 +35,22 @@ export default defineNuxtConfig({
                 { name: 'description', content: 'Tienda online con los mejores productos' }
             ]
         }
-    }
+    },
+
+    auth: {
+        provider: {
+            type: 'authjs',
+        }
+    },
+
+    runtimeConfig: {
+        // Variables privadas (solo servidor)
+        authSecret: process.env.AUTH_SECRET,
+        googleClientId: process.env.GOOGLE_CLIENT_ID,
+        googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        githubClientId: process.env.GITHUB_CLIENT_ID,
+        githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+    },
+
+
 })

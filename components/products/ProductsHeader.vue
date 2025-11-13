@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { useProfile } from '~/composable/useProfile';
 
-const props = withDefaults(defineProps < { isAuthenticated: boolean } > (), {
-    isAuthenticated: false
-})
+const { isAuthenticated } = useProfile();
 </script>
 
 <template>
@@ -14,7 +13,7 @@ const props = withDefaults(defineProps < { isAuthenticated: boolean } > (), {
         <p class="text-muted-foreground text-base md:text-lg">
             Descubre nuestra colección exclusiva
             <span v-if="isAuthenticated" class="inline-flex items-center gap-1 ml-2 text-primary font-medium">
-                <span class="text-xs px-2 py-0.5 rounded-full bg-primary/10">15% OFF para miembros</span>
+                <span class="text-sm px-2 py-0.5 rounded-full text-indigo-800">15% OFF para miembros</span>
             </span>
         </p>
     </div>

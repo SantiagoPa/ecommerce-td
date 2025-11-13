@@ -8,23 +8,22 @@ import { formatPrice } from '~/lib/formatPrice';
 import { getDiscountedPrice } from '~/lib/discountedPrice';
 import { useProductDetail } from '~/composable/useProductDetail';
 import { useStore } from '~/store/useStore';
-import type { ProductCart } from '~/types/cart';
-import ProductDetailItem from './ProductDetailItem.vue';
+import { useProfile } from '~/composable/useProfile';
 
 
 const props = withDefaults(defineProps<{
     product: Product | null
     isLoading?: boolean
-    isAuthenticated?: boolean
+    isAuthenticated: boolean
 }>(), {
     isLoading: false,
-    isAuthenticated: false
 })
 
 // Emits
 const emit = defineEmits<{
     addToCart: [product: Product]
 }>();
+
 
 const {
     currentImageIndex,
@@ -37,7 +36,7 @@ const {
     decreaseQuantity,
     addToCart,
     goBack,
-} = useProductDetail({ product: props.product, isAuthenticated: props.isAuthenticated, emit });
+} = useProductDetail({ product: props.product, isAuthenticated: props.isAuthenticated , emit });
 
 const { productsCart } = storeToRefs(useStore());
 
@@ -72,7 +71,7 @@ const oProductCart = computed(() => {
 
                         <!-- Member Badge -->
                         <div v-if="isAuthenticated"
-                            class="absolute top-4 right-4 bg-yellow-100 text-primary-foreground text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                            class="absolute top-4 right-4 bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
                             <span>-15%</span>
                         </div>
@@ -128,7 +127,7 @@ const oProductCart = computed(() => {
 
                     <!-- Member Benefit Message -->
                     <div v-if="isAuthenticated"
-                        class="p-4 rounded-lg bg-primary/5 border border-primary/20 bg-yellow-50">
+                        class="p-4 rounded-lg bg-indigo-700/90 text-white  border border-indigo-700/20">
                         <p class="text-sm font-medium text-primary flex items-center gap-2 ">
                             <Tag :size="16" />
                             <span>Como miembro, ahorras {{ formatPrice(savings) }} en este producto</span>
@@ -226,7 +225,7 @@ const oProductCart = computed(() => {
 
                         <!-- Member Badge -->
                         <div v-if="isAuthenticated"
-                            class="absolute top-4 right-4 bg-yellow-100 text-primary-foreground text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                            class="absolute top-4 right-4  bg-indigo-700/90 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                             <Tag :size="14" />
                             <span>-15%</span>
                         </div>
@@ -281,7 +280,7 @@ const oProductCart = computed(() => {
 
                     <!-- Member Benefit Message -->
                     <div v-if="isAuthenticated"
-                        class="p-4 rounded-lg bg-primary/5 border border-primary/20 bg-yellow-50">
+                        class="p-4 rounded-lg bg-indigo-700/90 text-white border border-indigo-700/20">
                         <p class="text-sm font-medium text-primary flex items-center gap-2 ">
                             <Tag :size="16" />
                             <span>Como miembro, ahorras {{ formatPrice(savings) }} en este producto</span>
@@ -327,8 +326,7 @@ const oProductCart = computed(() => {
                                 <span class="px-6 py-2 border-x font-medium min-w-[60px] text-center">
                                     0
                                 </span>
-                                <button @click="addToCart"
-                                    class="px-4 py-2 hover:bg-accent transition-colors">
+                                <button @click="addToCart" class="px-4 py-2 hover:bg-accent transition-colors">
                                     +
                                 </button>
                             </div>

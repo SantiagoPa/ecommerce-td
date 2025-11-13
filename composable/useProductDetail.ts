@@ -3,7 +3,7 @@ import type { Product } from "~/types/products"
 
 interface Props {
     product: Product | null;
-    isAuthenticated: boolean;
+    isAuthenticated:boolean;
     emit: (evt: "addToCart", product: Product) => void;
 }
 

@@ -25,8 +25,6 @@ const { data: products, error, pending, refresh } = await getProducts(
     itemsPerPage.value
 )
 isLoading.value = false;
-// Simular autenticación (esto vendría de tu auth store)
-const isAuthenticated = ref(false)
 
 // Manejar cambio de página
 const handlePageChange = async (page: number) => {
@@ -59,7 +57,6 @@ const addToCart = (product: Product) => {
         error,
         pending,
         refresh,
-        isAuthenticated,
         handlePageChange,
         addToCart
     };

@@ -2,7 +2,6 @@
 import Navbar from '@/components/navbar/Navbar.vue';
 import ToastContainer from '@/components/core/toast/ToastContainer.vue';
 import Separator from '@/components/core/Separator.vue';
-
 </script>
 
 <template>

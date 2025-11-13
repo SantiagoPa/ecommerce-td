@@ -4,14 +4,17 @@ import { useProducts } from '@/composable/useProducts';
 import type { Product } from '@/types/products';
 import { useToast } from '@/composable/useToast';
 import { useStore } from '~/store/useStore';
+import { useProfile } from '~/composable/useProfile';
+
 
 // Obtener el ID de la ruta
 const route = useRoute()
 const productId = route.params.id
 
 // Composable de productos
-const { getProductById } = useProducts()
+const { getProductById } = useProducts();
 const { onAddCart } = useStore();
+const { isAuthenticated } = useProfile();
 
 // Obtener producto específico con SSR
 const { data: product, error, pending } = await getProductById(productId as string)
@@ -38,10 +41,6 @@ useHead({
         }
     ]
 })
-
-// Simular autenticación
-const isAuthenticated = ref(true)
-
 // Manejar agregar al carrito
 const onAddToCart = (product: Product) => {
     const toast = useToast();
@@ -53,11 +52,7 @@ const onAddToCart = (product: Product) => {
 
 <template>
     <div>
-        <ProductDetail 
-            :product="product" 
-            :is-loading="pending" 
-            :is-authenticated="isAuthenticated"
-            @add-to-cart="onAddToCart" 
-        />
+        <ProductDetail :product="product" :is-loading="pending" @add-to-cart="onAddToCart"
+            :is-authenticated="isAuthenticated" />
     </div>
 </template>

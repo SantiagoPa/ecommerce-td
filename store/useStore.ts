@@ -9,7 +9,6 @@ export const useStore = defineStore('cart', {
         // Cargar datos del localStorage al inicializar usando el composable
         const { loadFromStorage } = usePersisted("cart-store");
         const stored = loadFromStorage() as { productsCart: ProductCart[] }
-        console.log({ stored });
         return stored || { productsCart: [] }
     },
     getters: {

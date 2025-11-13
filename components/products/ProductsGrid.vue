@@ -9,10 +9,9 @@ import ProductItem from './ProductItem.vue';
 const props = withDefaults(defineProps<{
     products: Product[]
     isLoading?: boolean
-    isAuthenticated?: boolean
+    isAuthenticated: boolean;
 }>(), {
     isLoading: false,
-    isAuthenticated: false,
 })
 
 // Emits
@@ -31,7 +30,7 @@ const addToCart = (product: Product) => {
     <section class="w-full py-8 md:py-12 lg:py-16">
         <div class="container mx-auto px-4">
 
-            <ProductsHeader :is-authenticated="isAuthenticated" />
+            <ProductsHeader  />
 
             <!-- Loading State -->
             <SkeletonProducts v-if="isLoading" />
@@ -45,8 +44,8 @@ const addToCart = (product: Product) => {
                     <!-- Image Container -->
                     <ProductItem
                         :product="product"
-                        :is-authenticated="isAuthenticated"
                         :add-to-cart="addToCart"
+                        :is-authenticated="isAuthenticated"
                     />
                 </article>
             </div>
